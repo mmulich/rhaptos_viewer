@@ -9,6 +9,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 requires = [
     'pyramid',
     'pyramid_debugtoolbar',
+    'pyramid_jinja2',
     'waitress',
     ]
 
@@ -37,4 +38,3 @@ setup(name='rhaptos_viewer',
       main = rhaptos_viewer:main
       """,
       )
-
