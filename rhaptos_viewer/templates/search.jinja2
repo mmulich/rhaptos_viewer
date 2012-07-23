@@ -1,65 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexions Web View</title>
-
-    <link href="/static/css/bootstrap.css" rel="stylesheet">
-    <style>
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-    </style>
-    <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
-
-    <!-- All JavaScript at the bottom, except this Modernizr build.
-         Modernizr enables HTML5 elements & feature detects for optimal performance.
-         Create your own custom Modernizr build: www.modernizr.com/download/ -->
-    <script src="/static/js/modernizr-2.6.1.min.js"></script>
-  </head>
-  <body>
-
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="/">Connexions Web View</a>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li><a href="/search">Search</a></li>
-              <li><a href="/support">Support</a></li>
-              <li><a href="/login">Log In</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container">
-      <h1>Search results for {{ request.params['q'] }}</h1>
-      <div id="search-results">
-        <ul>
-          {% for r in records %}
-          <li class="search-record"><a href="{{ r.link }}">{{ r.title
-              }}</a><div class="search-summary">{{ r.summary|safe }}</div></li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div> <!-- /container -->
-
-    <!-- Placed at the end of the document so the pages load faster
-    -->
-    <!-- Grab Google CDN's jQuery, with a protocol relative URL;
-         fall back to local if offline
-    -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="/static/js/jquery-1.7.2.min.js"><\/script>')</script>
-    <script src="/static/js/bootstrap.min.js"></script>
-
-  </body>
-</html>
+{% extends "base.jinja2" %}
+{% block content %}
+  <h1>Search results for {{ request.params['q'] }}</h1>
+  <div id="search-results">
+    <ul>
+      {% for r in records %}
+      <li class="search-record">
+        <a href="{{ r.link }}">{{ r.title }}</a>
+        <div class="search-summary">{{ r.summary|safe }}</div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
