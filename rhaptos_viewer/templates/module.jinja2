@@ -4,7 +4,18 @@
 {% endblock %}
 {% block content %}
   <h1 id="module-title">{{ module_title }}</h1>
-  <div id="module-body">
-    {{ module_body|safe }}
+  <div class="row-fluid">
+    {% if collection_contents_tree %}
+      <div id="collection-contents-tree" class="span4">
+        {{ collection_contents_tree|safe }}
+      </div>
+      <div id="module-body" class="span8">
+        {{ module_body|safe }}
+      </div>
+    {% else %}
+      <div id="module-body">
+        {{ module_body|safe }}
+      </div>
+    {% endif %}
   </div>
 {% endblock %}

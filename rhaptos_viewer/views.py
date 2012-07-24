@@ -119,7 +119,7 @@ def collection(request):
             'collection_body': "TODO: I need to work with the OAI interface " \
                                "to get this working until then... There is " \
                                "nothing to see here.",
-            'collections_contents_tree': contents_tree,
+            'collection_contents_tree': contents_tree,
             }
 
 def _process_collection(id, version='latest'):
@@ -167,7 +167,7 @@ def module_in_collection(request):
             'collection_body': "TODO: I need to work with the OAI interface " \
                 "to get this working until then... There is " \
                 "nothing to see here.",
-            'collections_contents_tree': collection_contents_tree,
+            'collection_contents_tree': collection_contents_tree,
             'module_title': module_title,
             'module_body': module_content,
             }
