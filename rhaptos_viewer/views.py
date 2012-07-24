@@ -54,8 +54,8 @@ def module(request):
     # Request the content from the repository.
     url = 'http://%s:%s/content/%s/%s/' % (REPO_HOST, REPO_PORT,
                                           module_id, module_version)
-    title = urllib2.urlopen(url + 'Title').read()
-    body = urllib2.urlopen(url + 'body').read()
+    title = urllib2.urlopen(url + 'Title').read().decode('utf-8')
+    body = urllib2.urlopen(url + 'body').read().decode('utf-8')
 
     soup = BeautifulSoup(body)
     # Transform the relative resource links to point to the origin.
@@ -90,7 +90,7 @@ def module(request):
 
     return {'title': SITE_TITLE,
             'module_title': title,
-            'module_body': str(soup).decode('utf-8'),
+            'module_body': str(soup),
             }
 
 @view_config(route_name='collection', renderer='collection.jinja2')
