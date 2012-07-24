@@ -57,11 +57,8 @@ def search(request):
 @view_config(route_name='module', renderer='module.jinja2')
 def module(request):
     """A view for displaying a CNX module."""
-    module_id = request.matchdict['id']
-    module_version = 'latest'
-    if '@' in module_id:
-        module_id, module_version = module_id.split('@')
-    title, content = _process_module(module_id, module_version)
+    id, version = _split_name(request.matchdict['name'])
+    title, content = _process_module(id, version)
     return {'title': SITE_TITLE,
             'module_title': title,
             'module_body': str(content),
@@ -109,10 +106,7 @@ def _process_module(id, version='latest'):
 @view_config(route_name='collection', renderer='collection.jinja2')
 def collection(request):
     """A view for displaying a collection of modules."""
-    id = request.matchdict['id']
-    version = 'latest'
-    if '@' in id:
-        id, version = id.split('@')
+    id, version = _split_name(request.matchdict['name'])
     title, content, contents_tree = _process_collection(id, version)
     return {'title': SITE_TITLE,
             'collection_title': title,
@@ -154,13 +148,13 @@ def module_in_collection(request):
     """Display a module within the context of a collection."""
     # XXX There is likely a better way to reuse the work done in
     #     previous views here.
-    ids = list(request.matchdict.get('ids', ()))
+    names = list(request.matchdict.get('names', ()))
 
     # This only handles one level of inheritence at the moment
     # (e.g. /<collection/<module>/).
-    module_title, module_content = _process_module(*_split_name(ids.pop()))
+    module_title, module_content = _process_module(*_split_name(names.pop()))
     collection_title, collection_content, collection_contents_tree = \
-            _process_collection(*_split_name(ids.pop()))
+            _process_collection(*_split_name(names.pop()))
 
     return {'title': SITE_TITLE,
             'collection_title': collection_title,
