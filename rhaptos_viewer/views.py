@@ -114,6 +114,7 @@ def collection(request):
         href = a.get('href')
         if href is None:
             continue
+        href = href.split('?')[0]
         href = href.rstrip('/')
         path = href.split('/')
         # It is assumed that all items in the contents tree link to a
