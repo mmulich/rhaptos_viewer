@@ -13,5 +13,6 @@ def main(global_config, **settings):
     config.add_route('search', '/search')
     config.add_route('module', '/module/{id}')
     config.add_route('collection', '/collection/{id}')
+    config.add_route('module_in_collection', '/content/*ids')
     config.scan()
     return config.make_wsgi_app()

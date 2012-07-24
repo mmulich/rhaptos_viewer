@@ -11,6 +11,7 @@ REPO_HOST = 'cnx.org'
 REPO_PORT = 80
 OPENSEARCH_URL = 'http://%s:%s/opensearchdescription' % (REPO_HOST, REPO_PORT)
 SITE_TITLE = 'Connexions Web Viewer'
+NAME_DIV_CHAR = '@'
 
 def _fix_url(url):
     """Fix a URL to put to this webview rather than the repository."""
@@ -21,6 +22,16 @@ def _fix_url(url):
     id, version = path[:4][-2:]
     path = ['', 'module', '%s@%s' % (id, version)]
     return '/'.join(path)
+
+def _split_name(name):
+    """Split an name (e.g. 'col123@1.4') into an id and version.
+    """
+    if len(name.split(NAME_DIV_CHAR)) <= 1:
+        id = name
+        version = 'latest'
+    else:
+        id, version = name.split(NAME_DIV_CHAR)
+    return id, version
 
 @view_config(route_name='casa', renderer='casa.jinja2')
 def casa(request):
@@ -137,3 +148,26 @@ def _process_collection(id, version='latest'):
             href = "/collection/%s@%s" % (link_id, link_version)
         a['href'] = href
     return title.decode('utf-8'), '', str(contents_tree_soup).decode('utf-8')
+
+@view_config(route_name='module_in_collection', renderer='module.jinja2')
+def module_in_collection(request):
+    """Display a module within the context of a collection."""
+    # XXX There is likely a better way to reuse the work done in
+    #     previous views here.
+    ids = list(request.matchdict.get('ids', ()))
+
+    # This only handles one level of inheritence at the moment
+    # (e.g. /<collection/<module>/).
+    module_title, module_content = _process_module(*_split_name(ids.pop()))
+    collection_title, collection_content, collection_contents_tree = \
+            _process_collection(*_split_name(ids.pop()))
+
+    return {'title': SITE_TITLE,
+            'collection_title': collection_title,
+            'collection_body': "TODO: I need to work with the OAI interface " \
+                "to get this working until then... There is " \
+                "nothing to see here.",
+            'collections_contents_tree': collection_contents_tree,
+            'module_title': module_title,
+            'module_body': module_content,
+            }
