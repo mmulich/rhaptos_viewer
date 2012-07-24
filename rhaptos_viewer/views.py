@@ -89,5 +89,5 @@ def module(request):
 
     return {'title': SITE_TITLE,
             'module_title': title,
-            'module_body': str(soup),
+            'module_body': str(soup).decode('utf-8'),
             }
