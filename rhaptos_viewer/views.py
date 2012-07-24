@@ -50,10 +50,15 @@ def module(request):
     module_version = 'latest'
     if '@' in module_id:
         module_id, module_version = module_id.split('@')
+    title, content = _process_module(module_id, module_version)
+    return {'title': SITE_TITLE,
+            'module_title': title,
+            'module_body': str(content),
+            }
 
+def _process_module(id, version='latest'):
     # Request the content from the repository.
-    url = 'http://%s:%s/content/%s/%s/' % (REPO_HOST, REPO_PORT,
-                                          module_id, module_version)
+    url = 'http://%s:%s/content/%s/%s/' % (REPO_HOST, REPO_PORT, id, version)
     title = urllib2.urlopen(url + 'Title').read().decode('utf-8')
     body = urllib2.urlopen(url + 'body').read().decode('utf-8')
 
@@ -88,10 +93,7 @@ def module(request):
             href = urljoin(url, href)
         a['href'] = href
 
-    return {'title': SITE_TITLE,
-            'module_title': title,
-            'module_body': str(soup),
-            }
+    return title, str(soup)
 
 @view_config(route_name='collection', renderer='collection.jinja2')
 def collection(request):
@@ -100,14 +102,23 @@ def collection(request):
     version = 'latest'
     if '@' in id:
         id, version = id.split('@')
+    title, content, contents_tree = _process_collection(id, version)
+    return {'title': SITE_TITLE,
+            'collection_title': title,
+            'collection_body': "TODO: I need to work with the OAI interface " \
+                               "to get this working until then... There is " \
+                               "nothing to see here.",
+            'collections_contents_tree': contents_tree,
+            }
 
+def _process_collection(id, version='latest'):
     # Request the content from the repository.
     url = 'http://%s:%s/content/%s/%s/' % (REPO_HOST, REPO_PORT,
                                            id, version)
-    title = urllib2.urlopen(url + 'getTitle').read().decode('utf-8')
+    title = urllib2.urlopen(url + 'getTitle').read()
 
     # XXX This is the only way to get the Contents Tree ATM...
-    contents_tree = urllib2.urlopen(url + 'htmlContentsTree').read().decode('utf-8')
+    contents_tree = urllib2.urlopen(url + 'htmlContentsTree').read()
     contents_tree_soup = BeautifulSoup(contents_tree)
     # Fix the link locations in the contents tree html.
     for a in contents_tree_soup.findAll('a'):
@@ -125,11 +136,4 @@ def collection(request):
         else:
             href = "/collection/%s@%s" % (link_id, link_version)
         a['href'] = href
-
-    return {'title': SITE_TITLE,
-            'collection_title': title,
-            'collection_body': "TODO: I need to work with the OAI interface " \
-                               "to get this working until then... There is " \
-                               "nothing to see here.",
-            'collections_contents_tree': str(contents_tree_soup).decode('utf-8'),
-            }
+    return title.decode('utf-8'), '', str(contents_tree_soup).decode('utf-8')
