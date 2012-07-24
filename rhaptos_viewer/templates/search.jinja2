@@ -1,6 +1,7 @@
 {% extends "base.jinja2" %}
 {% block content %}
   <h1>Search results for {{ request.params['q'] }}</h1>
+  {% include "snippets/search_box.jinja2" %}
   <div id="search-results">
     <ul>
       {% for r in records %}

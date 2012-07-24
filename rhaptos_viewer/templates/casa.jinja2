@@ -27,10 +27,7 @@
   <div class="row-fluid">
     <div class="span4">
       <h2>Find content</h2>
-      <form class="well form-search" method="GET" action="/search">
-        <input name="q" type="text" class="input-medium search-query">
-        <button type="submit" class="btn">Search</button>
-      </form>
+      {% include "snippets/search_box.jinja2" %}
     </div>
     <div class="span8">
       <h2><a href="http://cnx.org/help/authoring/createmodule">Create content</a></h2>
