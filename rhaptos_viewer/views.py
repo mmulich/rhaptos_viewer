@@ -45,6 +45,7 @@ def search(request):
 
 @view_config(route_name='module', renderer='module.jinja2')
 def module(request):
+    """A view for displaying a CNX module."""
     module_id = request.matchdict['id']
     module_version = 'latest'
     if '@' in module_id:
@@ -90,4 +91,14 @@ def module(request):
     return {'title': SITE_TITLE,
             'module_title': title,
             'module_body': str(soup).decode('utf-8'),
+            }
+
+@view_config(route_name='collection', renderer='collection.jinja2')
+def collection(request):
+    """A view for displaying a collection of modules."""
+    return {'title': SITE_TITLE,
+            'collection_title': 'A COLLECTION VIEW PLACEHOLDER',
+            'collection_body': "TODO: I need to work with the OAI interface " \
+                               "to get this working until then... There is " \
+                               "nothing to see here.",
             }

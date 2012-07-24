@@ -12,5 +12,6 @@ def main(global_config, **settings):
     config.add_route('casa', '/')
     config.add_route('search', '/search')
     config.add_route('module', '/module/{id}')
+    config.add_route('collection', '/collection/{id}')
     config.scan()
     return config.make_wsgi_app()
