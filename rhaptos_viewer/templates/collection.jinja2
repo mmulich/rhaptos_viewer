@@ -4,6 +4,9 @@
 {% endblock %}
 {% block content %}
   <h1 id="collection-title">{{ collection_title }}</h1>
+  <div id="collection-contents-tree">
+    {{ collections_contents_tree|safe }}
+  </div>
   <div id="collection-body">
     {{ collection_body|safe }}
   </div>

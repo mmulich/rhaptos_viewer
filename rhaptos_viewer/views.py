@@ -96,9 +96,39 @@ def module(request):
 @view_config(route_name='collection', renderer='collection.jinja2')
 def collection(request):
     """A view for displaying a collection of modules."""
+    id = request.matchdict['id']
+    version = 'latest'
+    if '@' in id:
+        id, version = id.split('@')
+
+    # Request the content from the repository.
+    url = 'http://%s:%s/content/%s/%s/' % (REPO_HOST, REPO_PORT,
+                                           id, version)
+    title = urllib2.urlopen(url + 'getTitle').read().decode('utf-8')
+
+    # XXX This is the only way to get the Contents Tree ATM...
+    contents_tree = urllib2.urlopen(url + 'htmlContentsTree').read().decode('utf-8')
+    contents_tree_soup = BeautifulSoup(contents_tree)
+    # Fix the link locations in the contents tree html.
+    for a in contents_tree_soup.findAll('a'):
+        href = a.get('href')
+        if href is None:
+            continue
+        href = href.rstrip('/')
+        path = href.split('/')
+        # It is assumed that all items in the contents tree link to a
+        # module or subcollection.
+        link_id, link_version = path[-2:]
+        if link_id.startswith('m'):
+            href = "/module/%s@%s" % (link_id, link_version)
+        else:
+            href = "/collection/%s@%s" % (link_id, link_version)
+        a['href'] = href
+
     return {'title': SITE_TITLE,
-            'collection_title': 'A COLLECTION VIEW PLACEHOLDER',
+            'collection_title': title,
             'collection_body': "TODO: I need to work with the OAI interface " \
                                "to get this working until then... There is " \
                                "nothing to see here.",
+            'collections_contents_tree': str(contents_tree_soup).decode('utf-8'),
             }
