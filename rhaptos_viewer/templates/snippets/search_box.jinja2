@@ -1,4 +1,7 @@
 <form class="well form-search" method="GET" action="/search">
-  <input name="q" type="text" class="input-medium search-query">
+  <input name="q" type="text" 
+         class="input-medium search-query"
+         value="{{ request.params.get('q', '') }}"
+         />
   <button type="submit" class="btn">Search</button>
 </form>
