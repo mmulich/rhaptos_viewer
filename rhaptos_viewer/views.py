@@ -19,7 +19,7 @@ def _fix_url(url):
     if path[1] != 'content':
         return url
     id, version = path[:4][-2:]
-    path = ['', 'content', '%s@%s' % (id, version)]
+    path = ['', 'module', '%s@%s' % (id, version)]
     return '/'.join(path)
 
 @view_config(route_name='casa', renderer='casa.jinja2')
@@ -79,8 +79,8 @@ def module(request):
             href = urljoin(url, href)
         elif path[1] == 'content':
             # Handles links to other modules.
-            version = path.pop()
-            href = "%s@%s" % ('/'.join(path), version)
+            link_id, link_version = path[-2:]
+            href = "/module/%s@%s" % (link_id, link_version)
         else:
             # Hopefully everything else falls into this category but
             # I'm doubtful.
